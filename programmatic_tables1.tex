@@ -1,0 +1,994 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Programmatic Tables 1},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Programmatic Tables 1}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\begin{document}
+\maketitle
+
+\textbf{Much of this worksheet is copied directly from the gt intro
+vignette}
+
+How should we populate tables for academic paper or presentation? This
+is the fundamental question we are looking to address in the next two R
+user group sessions. If you have ever created tables ``by hand'' then
+you know how time consuming this process can be. It is also error prone
+since we humans are not nearly as good at copying as computers.
+Eventually we will make a copy error. Also updating a table that you
+have created by hand can be a difficult process.
+
+In this exercise we will introduce some alternative techniques using the
+\texttt{gt} package in R.
+
+The \textbf{gt} package is all about making it simple to produce
+nice-looking display tables. Display tables? Well yes, we are trying to
+distinguish between data tables (e.g., tibbles, \texttt{data.frame}s,
+etc.) and those tables you'd find in a web page, a journal article, or
+in a magazine. Such tables can likewise be called presentation tables,
+summary tables, or just tables really. Here are some examples, ripped
+straight from the web:
+
+We can think of display tables as output only, where we'd not want to
+use them as input ever again. Other features include annotations, table
+element styling, and text transformations that serve to communicate the
+subject matter more clearly.
+
+\subsubsection{\texorpdfstring{A Walkthrough of the \textbf{gt} Basics
+with a Simple
+Table}{A Walkthrough of the gt Basics with a Simple Table}}\label{a-walkthrough-of-the-gt-basics-with-a-simple-table}
+
+Let's use a less common dataset that is available in the R
+\textbf{datasets} package: \texttt{islands}. It's actually not a data
+frame but a named vector. That's okay though, we can use use
+\textbf{dplyr} and prepare a tibble from it:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Take the `islands` dataset and use some}
+\CommentTok{# dplyr functionality to obtain the ten}
+\CommentTok{# biggest islands in the world}
+\NormalTok{islands_tbl <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}\DataTypeTok{name =} \KeywordTok{names}\NormalTok{(islands), }\DataTypeTok{size =}\NormalTok{ islands) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(size)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{slice}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\CommentTok{# Display the table}
+\NormalTok{islands_tbl}
+\CommentTok{#> # A tibble: 10 x 2}
+\CommentTok{#>    name           size}
+\CommentTok{#>    <chr>         <dbl>}
+\CommentTok{#>  1 Asia          16988}
+\CommentTok{#>  2 Africa        11506}
+\CommentTok{#>  3 North America  9390}
+\CommentTok{#>  4 South America  6795}
+\CommentTok{#>  5 Antarctica     5500}
+\CommentTok{#>  6 Europe         3745}
+\CommentTok{#>  7 Australia      2968}
+\CommentTok{#>  8 Greenland       840}
+\CommentTok{#>  9 New Guinea      306}
+\CommentTok{#> 10 Borneo          280}
+\end{Highlighting}
+\end{Shaded}
+
+If we pass \texttt{islands\_tbl} to the \emph{function} \texttt{gt()},
+we'll get a \textbf{gt Table} as output. As an aside, we could have
+easily used a data frame instead as valid \textbf{Table Data} for
+\textbf{gt}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create a display table showing ten of}
+\CommentTok{# the largest islands in the world}
+\NormalTok{gt_tbl <-}\StringTok{ }\KeywordTok{gt}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ islands_tbl)}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\toprule
+name & size \\ 
+\midrule
+Asia & 16988 \\ 
+Africa & 11506 \\ 
+North America & 9390 \\ 
+South America & 6795 \\ 
+Antarctica & 5500 \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}
+
+That doesn't look too bad. Sure, it's basic but we really didn't really
+ask for much. We did receive a proper table with column labels and the
+data. Also, that default striping is a nice touch. Oftentimes however,
+you'll want a bit more: a \textbf{Table header}, a \textbf{Stub}, and
+sometimes \emph{footnotes} and \emph{source notes} in the \textbf{Table
+Footer} part.
+
+\subsubsection{Adding Parts to this Simple
+Table}\label{adding-parts-to-this-simple-table}
+
+The \textbf{gt} package makes it relatively easy to add parts so that
+the resulting \textbf{gt Table} better conveys the information you want
+to present. These table parts work well together and there the possible
+variations in arrangement can handle most tabular presentation needs.
+The previous \textbf{gt Table} demonstrated had only two parts, the
+\textbf{Column Labels} and the \textbf{Table Body}. The next few
+examples will show all of the other table parts that are available.
+
+This is the way the main parts of a table (and their subparts) fit
+together:
+
+The parts (roughly from top to bottom) are:
+
+\begin{itemize}
+\tightlist
+\item
+  the \textbf{Table Header} (optional; with a \textbf{title} and
+  possibly a \textbf{subtitle})
+\item
+  the \textbf{Stub} and the \textbf{Stub Head} (optional; contains
+  \emph{row labels}, optionally within \emph{row groups} having
+  \emph{row group labels} and possibly \emph{summary labels} when a
+  summary is present)
+\item
+  the \textbf{Column Labels} (contains \emph{column labels}, optionally
+  under \emph{spanner column labels})
+\item
+  the \textbf{Table Body} (contains \emph{columns} and \emph{rows} of
+  \emph{cells})
+\item
+  the \textbf{Table Footer} (optional; possibly with \textbf{footnotes}
+  and \textbf{source notes})
+\end{itemize}
+
+The way that we add parts like the \textbf{Table Header} and
+\emph{footnotes} in the \textbf{Table Footer} is to use the
+\texttt{tab\_*()} family of functions. A \textbf{Table Header} is easy
+to add so let's see how the previous table looks with a \textbf{title}
+and a \textbf{subtitle}. We can add this part using the
+\texttt{tab\_header()} function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Make a display table with the `islands_tbl`}
+\CommentTok{# table; put a heading just above the column labels}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_header}\NormalTok{(}
+    \DataTypeTok{title =} \StringTok{"Large Landmasses of the World"}\NormalTok{,}
+    \DataTypeTok{subtitle =} \StringTok{"The top ten largest are presented"}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\caption*{
+\large Large Landmasses of the World\\ 
+\small The top ten largest are presented\\ 
+} \\ 
+\toprule
+name & size \\ 
+\midrule
+Asia & 16988 \\ 
+Africa & 11506 \\ 
+North America & 9390 \\ 
+South America & 6795 \\ 
+Antarctica & 5500 \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}
+
+The \textbf{Header} table part provides an opportunity to describe the
+data that's presented. The \texttt{subtitle}, which functions as a
+subtitle, is an optional part of the \textbf{Header}. We may also style
+the \texttt{title} and \texttt{subtitle} using Markdown! We do this by
+wrapping the values passed to \texttt{title} or \texttt{subtitle} with
+the \texttt{md()} function. Here is an example with the table data
+truncated for brevity:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Use markdown for the heading's `title` and `subtitle` to}
+\CommentTok{# add bold and italicized characters}
+\KeywordTok{gt}\NormalTok{(islands_tbl[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{,]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_header}\NormalTok{(}
+    \DataTypeTok{title =} \KeywordTok{md}\NormalTok{(}\StringTok{"**Large Landmasses of the World**"}\NormalTok{),}
+    \DataTypeTok{subtitle =} \KeywordTok{md}\NormalTok{(}\StringTok{"The *top two* largest are presented"}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\caption*{
+\large \textbf{Large Landmasses of the World}\\ 
+\small The \emph{top two} largest are presented\\ 
+} \\ 
+\toprule
+name & size \\ 
+\midrule
+Asia & 16988 \\ 
+Africa & 11506 \\ 
+\bottomrule
+\end{longtable}
+
+A \textbf{source note} can be added to the table's \textbf{footer}
+through use of the \texttt{tab\_source\_note()} function. It works in
+the same way as \texttt{tab\_header()} (it also allows for Markdown
+inputs) except it can be called multiple times---each invocation results
+in the addition of a source note.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Display the `islands_tbl` data with a heading and}
+\CommentTok{# two source notes}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_source_note}\NormalTok{(}
+    \DataTypeTok{source_note =} \StringTok{"Source: The World Almanac and Book of Facts, 1975, page 406."}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_source_note}\NormalTok{(}
+    \DataTypeTok{source_note =} \KeywordTok{md}\NormalTok{(}\StringTok{"Reference: McNeil, D. R. (1977) *Interactive Data Analysis*. Wiley."}\NormalTok{)}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\caption*{
+\large Large Landmasses of the World\\ 
+\small The top ten largest are presented\\ 
+} \\ 
+\toprule
+name & size \\ 
+\midrule
+Asia & 16988 \\ 
+Africa & 11506 \\ 
+North America & 9390 \\ 
+South America & 6795 \\ 
+Antarctica & 5500 \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}\begin{minipage}{\linewidth}
+Source: The World Almanac and Book of Facts, 1975, page 406.\\ 
+Reference: McNeil, D. R. (1977) \emph{Interactive Data Analysis}. Wiley.\\ 
+\end{minipage}
+
+Footnotes live inside the \textbf{Footer} part and their reference
+glyphs are attached to cell data. Footnotes are added with the
+\texttt{tab\_footnote()} function. The helper function
+\texttt{cells\_data()} can be used with the \texttt{location} argument
+to specify which data cells should be the target of the footnote. The
+\texttt{cells\_data()} helper has the two arguments \texttt{columns} and
+\texttt{rows}. For each of these, we can supply (1) a vector of colnames
+or rownames, (2) a vector of column/row indices, (3) bare column names
+wrapped in \texttt{vars()} or row labels within \texttt{c()}, or (4) a
+select helper function (\texttt{starts\_with()}, \texttt{ends\_with()},
+\texttt{contains()}, \texttt{matches()}, \texttt{one\_of()}, and
+\texttt{everything()}). For \texttt{rows} specifically, we can use a
+conditional statement with column names as variables (e.g.,
+\texttt{size\ \textgreater{}\ 15000}).
+
+Here is a simple example on how a footnotes can be added to a table
+cell. Let's add a footnote that references the \texttt{North\ America}
+and \texttt{South\ America} cells in the \texttt{name} column:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Add footnotes (the same text) to two different}
+\CommentTok{# cell; data cells are targeted with `data_cells()`}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_footnote}\NormalTok{(}
+    \DataTypeTok{footnote =} \StringTok{"The Americas."}\NormalTok{,}
+    \DataTypeTok{locations =} \KeywordTok{cells_data}\NormalTok{(}
+      \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(name),}
+      \DataTypeTok{rows =} \DecValTok{3}\OperatorTok{:}\DecValTok{4}\NormalTok{)}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\caption*{
+\large Large Landmasses of the World\\ 
+\small The top ten largest are presented\\ 
+} \\ 
+\toprule
+name & size \\ 
+\midrule
+Asia & 16988 \\ 
+Africa & 11506 \\ 
+North America\textsuperscript{1} & 9390 \\ 
+South America\textsuperscript{1} & 6795 \\ 
+Antarctica & 5500 \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}
+
+\vspace{-5mm}
+
+\begin{minipage}{\linewidth}
+\textsuperscript{1}The Americas. \\ 
+\end{minipage}\begin{minipage}{\linewidth}
+Source: The World Almanac and Book of Facts, 1975, page 406.\\ 
+Reference: McNeil, D. R. (1977) \emph{Interactive Data Analysis}. Wiley.\\ 
+\end{minipage}
+
+Here is a slightly more complex example of adding footnotes that use
+expressions in \texttt{rows} to help target cells in a column by the
+underlying data in \texttt{islands\_tbl}. First, a set of \textbf{dplyr}
+statements obtains the name of the `island' by largest landmass. This is
+assigned to the \texttt{largest} object and is used in the first
+\texttt{tab\_footnote()} call that targets the cell in the \texttt{size}
+column that is next to a \texttt{name} value that is stored in
+\texttt{largest} (`Asia'). The second \texttt{tab\_footnote()} is
+similar except we are supplying a conditional statement that gets the
+lowest population.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Determine the row that contains the}
+\CommentTok{# largest landmass ('Asia')}
+\NormalTok{largest <-}\StringTok{ }
+\StringTok{  }\NormalTok{islands_tbl }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(size)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pull}\NormalTok{(name)}
+\CommentTok{# Create two additional footnotes, using the}
+\CommentTok{# `columns` and `where` arguments of `data_cells()`}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_footnote}\NormalTok{(}
+    \DataTypeTok{footnote =} \KeywordTok{md}\NormalTok{(}\StringTok{"The **largest** by area."}\NormalTok{),}
+    \DataTypeTok{locations =} \KeywordTok{cells_data}\NormalTok{(}
+      \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(size),}
+      \DataTypeTok{rows =}\NormalTok{ name }\OperatorTok{==}\StringTok{ }\NormalTok{largest)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_footnote}\NormalTok{(}
+    \DataTypeTok{footnote =} \StringTok{"The lowest by population."}\NormalTok{,}
+    \DataTypeTok{locations =} \KeywordTok{cells_data}\NormalTok{(}
+      \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(size),}
+      \DataTypeTok{rows =}\NormalTok{ size }\OperatorTok{==}\StringTok{ }\KeywordTok{min}\NormalTok{(size))}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\CommentTok{#> Warning: HTML tags found, and they will be removed.}
+\CommentTok{#>  * set `options(gt.html_tag_check = FALSE)` to disable this check}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\caption*{
+\large Large Landmasses of the World\\ 
+\small The top ten largest are presented\\ 
+} \\ 
+\toprule
+name & size \\ 
+\midrule
+Asia & 16988\textsuperscript{1} \\ 
+Africa & 11506 \\ 
+North America\textsuperscript{2} & 9390 \\ 
+South America\textsuperscript{2} & 6795 \\ 
+Antarctica & 5500 \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280\textsuperscript{3} \\ 
+\bottomrule
+\end{longtable}
+
+\vspace{-5mm}
+
+\begin{minipage}{\linewidth}
+\textsuperscript{1}The largest by area. \\ 
+\textsuperscript{2}The Americas. \\ 
+\textsuperscript{3}The lowest by population. \\ 
+\end{minipage}\begin{minipage}{\linewidth}
+Source: The World Almanac and Book of Facts, 1975, page 406.\\ 
+Reference: McNeil, D. R. (1977) \emph{Interactive Data Analysis}. Wiley.\\ 
+\end{minipage}
+
+We were able to supply the reference locations in the table by using the
+\texttt{cells\_data()} helper function and supplying the necessary
+targeting through the \texttt{columns} and \texttt{rows} arguments.
+Other \texttt{cells\_*()} functions have similar interfaces and they
+allow us to target cells in different parts of the table.
+
+\subsubsection{The Stub}\label{the-stub}
+
+The \textbf{Stub} is the area to the left in a table that contains
+\emph{row labels}, and may contain \emph{row group labels}, and
+\emph{summary labels}. Those subparts can be grouped in a sequence of
+\emph{row groups}. The \textbf{Stub Head} provides a location for a
+label that describes the \textbf{Stub}. The \textbf{Stub} is optional
+since there are cases where a \textbf{Stub} wouldn't be useful (e.g.,
+the display tables presented above were just fine without a
+\textbf{Stub}).
+
+An easy way to generate a \textbf{Stub} part is by specifying a stub
+column in the \texttt{gt()} function with the \texttt{rowname\_col}
+argument. Alternatively, we can have an input dataset with a column
+named \texttt{rowname}---this magic column will signal to \textbf{gt}
+that that column should be used as the stub, making \emph{row labels}.
+Let's add a stub with our \texttt{islands\_tbl} dataset by modifying the
+call to \texttt{gt()}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create a gt table showing ten of the}
+\CommentTok{# largest islands in the world; this}
+\CommentTok{# time with a stub}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{islands_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gt}\NormalTok{(}\DataTypeTok{rowname_col =} \StringTok{"name"}\NormalTok{)}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\toprule
+ & size \\ 
+\midrule
+Asia & 16988 \\ 
+Africa & 11506 \\ 
+North America & 9390 \\ 
+South America & 6795 \\ 
+Antarctica & 5500 \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}
+
+Notice that the landmass names are off the the left in an unstriped
+area? That's the \textbf{stub}. We can apply what's known as a
+\textbf{stubhead label}. This label can be added with the
+\texttt{tab\_stubhead\_label()} function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Generate a simple table with a stub}
+\CommentTok{# and add a stubhead label}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_stubhead_label}\NormalTok{(}\DataTypeTok{label =} \StringTok{"landmass"}\NormalTok{)}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\toprule
+landmass & size \\ 
+\midrule
+Asia & 16988 \\ 
+Africa & 11506 \\ 
+North America & 9390 \\ 
+South America & 6795 \\ 
+Antarctica & 5500 \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}
+
+A very important thing to note here is that the table now has one
+column. Before, when there was no \textbf{stub}, two columns were
+present (with \textbf{column labels} \texttt{name} and \texttt{size})
+but now column number \texttt{1} (the only column) is \texttt{size}.
+
+To apply our table parts as before (up to and including the footnotes)
+we use the following statements:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Display the `islands_tbl` data with a stub,}
+\CommentTok{# a heading, source notes, and footnotes}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_header}\NormalTok{(}
+    \DataTypeTok{title =} \StringTok{"Large Landmasses of the World"}\NormalTok{,}
+    \DataTypeTok{subtitle =} \StringTok{"The top ten largest are presented"}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_source_note}\NormalTok{(}
+    \DataTypeTok{source_note =} \StringTok{"Source: The World Almanac and Book of Facts, 1975, page 406."}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_source_note}\NormalTok{(}
+    \DataTypeTok{source_note =} \KeywordTok{md}\NormalTok{(}\StringTok{"Reference: McNeil, D. R. (1977) *Interactive Data Analysis*. Wiley."}\NormalTok{)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_footnote}\NormalTok{(}
+    \DataTypeTok{footnote =} \KeywordTok{md}\NormalTok{(}\StringTok{"The **largest** by area."}\NormalTok{),}
+    \DataTypeTok{locations =} \KeywordTok{cells_data}\NormalTok{(}
+      \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(size),}
+      \DataTypeTok{rows =}\NormalTok{ largest)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_footnote}\NormalTok{(}
+    \DataTypeTok{footnote =} \StringTok{"The lowest by population."}\NormalTok{,}
+    \DataTypeTok{locations =} \KeywordTok{cells_data}\NormalTok{(}
+      \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(size),}
+      \DataTypeTok{rows =} \KeywordTok{contains}\NormalTok{(}\StringTok{"arc"}\NormalTok{))}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\CommentTok{#> Warning: HTML tags found, and they will be removed.}
+\CommentTok{#>  * set `options(gt.html_tag_check = FALSE)` to disable this check}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\caption*{
+\large Large Landmasses of the World\\ 
+\small The top ten largest are presented\\ 
+} \\ 
+\toprule
+landmass & size \\ 
+\midrule
+Asia & 16988\textsuperscript{1} \\ 
+Africa & 11506 \\ 
+North America & 9390 \\ 
+South America & 6795 \\ 
+Antarctica & 5500\textsuperscript{2} \\ 
+Europe & 3745 \\ 
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}
+
+\vspace{-5mm}
+
+\begin{minipage}{\linewidth}
+\textsuperscript{1}The largest by area. \\ 
+\textsuperscript{2}The lowest by population. \\ 
+\end{minipage}\begin{minipage}{\linewidth}
+Source: The World Almanac and Book of Facts, 1975, page 406.\\ 
+Reference: McNeil, D. R. (1977) \emph{Interactive Data Analysis}. Wiley.\\ 
+\end{minipage}
+
+Let's incorporate row groups into the display table. This divides rows
+into groups, creating \emph{row groups}, and results in a display of a
+\emph{row group labels} right above the each group. This can be easily
+done with a table containing row labels. We can make a new \emph{row
+group} with each call of the \texttt{tab\_row\_group()} function. The
+inputs are group names in the \texttt{group} argument, and row
+references in the \texttt{rows} argument. We can use any of the
+strategies to reference rows as we did we footnotes (e.g., vectors of
+names/indices, select helpers, etc.).
+
+Here we will create three row groups (with row group labels
+\texttt{continent}, \texttt{country}, and \texttt{subregion}) to have a
+grouping of rows.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Create three row groups with the}
+\CommentTok{# `tab_row_group()` function}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{tab_row_group}\NormalTok{(}
+    \DataTypeTok{group =} \StringTok{"continent"}\NormalTok{,}
+    \DataTypeTok{rows =} \DecValTok{1}\OperatorTok{:}\DecValTok{6}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_row_group}\NormalTok{(}
+    \DataTypeTok{group =} \StringTok{"country"}\NormalTok{,}
+    \DataTypeTok{rows =} \KeywordTok{c}\NormalTok{(}\StringTok{"Australia"}\NormalTok{, }\StringTok{"Greenland"}\NormalTok{)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_row_group}\NormalTok{(}
+    \DataTypeTok{group =} \StringTok{"subregion"}\NormalTok{,}
+    \DataTypeTok{rows =} \KeywordTok{c}\NormalTok{(}\StringTok{"New Guinea"}\NormalTok{, }\StringTok{"Borneo"}\NormalTok{)}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\CommentTok{#> Warning in min(rows_matched): no non-missing arguments to min; returning}
+\CommentTok{#> Inf}
+\CommentTok{#> Warning in max(rows_matched): no non-missing arguments to max; returning -}
+\CommentTok{#> Inf}
+\CommentTok{#> Warning: HTML tags found, and they will be removed.}
+\CommentTok{#>  * set `options(gt.html_tag_check = FALSE)` to disable this check}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{lr}
+\caption*{
+\large Large Landmasses of the World\\ 
+\small The top ten largest are presented\\ 
+} \\ 
+\toprule
+landmass & size \\ 
+\midrule
+\multicolumn{1}{l}{continent} \\ 
+\midrule
+Asia & 16988\textsuperscript{1} \\ 
+Africa & 11506 \\ 
+North America & 9390 \\ 
+South America & 6795 \\ 
+Antarctica & 5500\textsuperscript{2} \\ 
+Europe & 3745 \\ 
+\midrule
+\multicolumn{1}{l}{country} \\ 
+\midrule
+Australia & 2968 \\ 
+Greenland & 840 \\ 
+\midrule
+\multicolumn{1}{l}{subregion} \\ 
+\midrule
+New Guinea & 306 \\ 
+Borneo & 280 \\ 
+\bottomrule
+\end{longtable}
+
+\vspace{-5mm}
+
+\begin{minipage}{\linewidth}
+\textsuperscript{1}The largest by area. \\ 
+\textsuperscript{2}The lowest by population. \\ 
+\end{minipage}\begin{minipage}{\linewidth}
+Source: The World Almanac and Book of Facts, 1975, page 406.\\ 
+Reference: McNeil, D. R. (1977) \emph{Interactive Data Analysis}. Wiley.\\ 
+\end{minipage}
+
+Three \emph{row groups} have been made since there are three unique
+categories under \texttt{groupname}. Across the top of each \emph{row
+group} is the \emph{row group label} contained in a separate row (these
+cut across the field and they contain nothing but the \emph{row group
+label}). A rearrangement of rows is carried out to ensure each of the
+rows is collected within the appropriate \emph{row groups}.
+
+Having groups of rows in \emph{row groups} is a great way to present
+information. Including data summaries particular to each group is a
+natural extension of this idea. This process of adding summary rows with
+\emph{summary labels} is covered in a separate article (\emph{Creating
+Summary Lines}).
+
+Another way to make row groups is to have the magic column
+\texttt{groupname} present in the input data table. For our above
+example with \texttt{islands\_tbl}, a \texttt{groupname} column with the
+categories \texttt{continent}, \texttt{country}, and \texttt{subregion}
+in the appropriate rows would produce row groups automatically (i.e.,
+there would be no need to use the \texttt{tab\_row\_group()}
+statements). This strategy of supplying group names in a
+\texttt{groupname} column name can sometimes be advantageous since we
+can rely on functions such as those available in \textbf{dplyr} to
+generate the categories (e.g., using \texttt{case\_when()} or
+\texttt{if\_else()}).
+
+\subsubsection{The Column Labels}\label{the-column-labels}
+
+The table's \textbf{Column Labels} part contains, at a minimum, columns
+and their \emph{column labels}. The last example had a single column:
+\texttt{size}. Just as in the \textbf{Stub}, we can create groupings
+called \emph{spanner columns} that encompass one or more columns.
+
+To better demonstrate how \textbf{Column Labels} work and are displayed,
+let's use an input data table with more columns. In this case, that
+input table will be \texttt{airquality}. It has the following columns:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Ozone}: mean ground-level ozone in parts per billion by volume
+  (ppbV), measured between 13:00 and 15:00
+\item
+  \texttt{Solar.R}: solar radiation in Langley units (cal/m2), measured
+  between 08:00 and noon
+\item
+  \texttt{Wind}: mean wind speed in miles per hour (mph)
+\item
+  \texttt{Temp}: maximum daily air temperature in degrees Fahrenheit
+  (°F)
+\item
+  \texttt{Month}, \texttt{Day}: the numeric month and day of month for
+  the record
+\end{itemize}
+
+We know that all measurements took place in 1973, so a \texttt{year}
+column will be added to the dataset before it is passed to
+\texttt{gt()}.
+
+Let's organize the time information under a \texttt{Time} \emph{spanner
+column label}, and put the other columns under a \texttt{Measurement}
+\emph{spanner column label}. We can do this with the
+\texttt{tab\_spanner()} function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Modify the `airquality` dataset by adding the year}
+\CommentTok{# of the measurements (1973) and limiting to 10 rows}
+\NormalTok{airquality_m <-}\StringTok{ }
+\StringTok{  }\NormalTok{airquality }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Year =}\NormalTok{ 1973L) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{slice}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+  
+\CommentTok{# Create a display table using the `airquality`}
+\CommentTok{# dataset; arrange columns into groups}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\KeywordTok{gt}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ airquality_m) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_header}\NormalTok{(}
+    \DataTypeTok{title =} \StringTok{"New York Air Quality Measurements"}\NormalTok{,}
+    \DataTypeTok{subtitle =} \StringTok{"Daily measurements in New York City (May 1-10, 1973)"}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_spanner}\NormalTok{(}
+    \DataTypeTok{label =} \StringTok{"Time"}\NormalTok{,}
+    \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(Year, Month, Day)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tab_spanner}\NormalTok{(}
+    \DataTypeTok{label =} \StringTok{"Measurement"}\NormalTok{,}
+    \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(Ozone, Solar.R, Wind, Temp)}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{rrrrrrr}
+\caption*{
+\large New York Air Quality Measurements\\ 
+\small Daily measurements in New York City (May 1-10, 1973)\\ 
+} \\ 
+\toprule
+\multicolumn{4}{c}{Measurement} & \multicolumn{3}{c}{Time} \\ 
+ \cmidrule(lr){1-4}\cmidrule(lr){5-7}
+Ozone & Solar.R & Wind & Temp & Month & Day & Year \\ 
+\midrule
+41 & 190 & 7.4 & 67 & 5 & 1 & 1973 \\ 
+36 & 118 & 8.0 & 72 & 5 & 2 & 1973 \\ 
+12 & 149 & 12.6 & 74 & 5 & 3 & 1973 \\ 
+18 & 313 & 11.5 & 62 & 5 & 4 & 1973 \\ 
+NA & NA & 14.3 & 56 & 5 & 5 & 1973 \\ 
+28 & NA & 14.9 & 66 & 5 & 6 & 1973 \\ 
+23 & 299 & 8.6 & 65 & 5 & 7 & 1973 \\ 
+19 & 99 & 13.8 & 59 & 5 & 8 & 1973 \\ 
+8 & 19 & 20.1 & 61 & 5 & 9 & 1973 \\ 
+NA & 194 & 8.6 & 69 & 5 & 10 & 1973 \\ 
+\bottomrule
+\end{longtable}
+
+We can do two more things to make this presentable:
+
+\begin{itemize}
+\tightlist
+\item
+  move the \texttt{Time} columns to the beginning of the series (using
+  \texttt{cols\_move\_to\_start()})
+\item
+  customize the column labels so that they are more descriptive (using
+  \texttt{cols\_label()})
+\end{itemize}
+
+Let's do both of these things in the next example.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Move the time-based columns to the start of}
+\CommentTok{# the column series; modify the column labels of}
+\CommentTok{# the measurement-based columns}
+\NormalTok{gt_tbl <-}\StringTok{ }
+\StringTok{  }\NormalTok{gt_tbl }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{cols_move_to_start}\NormalTok{(}
+    \DataTypeTok{columns =} \KeywordTok{vars}\NormalTok{(Year, Month, Day)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{cols_label}\NormalTok{(}
+    \DataTypeTok{Ozone =} \KeywordTok{html}\NormalTok{(}\StringTok{"Ozone,<br>ppbV"}\NormalTok{),}
+    \DataTypeTok{Solar.R =} \KeywordTok{html}\NormalTok{(}\StringTok{"Solar R.,<br>cal/m<sup>2</sup>"}\NormalTok{),}
+    \DataTypeTok{Wind =} \KeywordTok{html}\NormalTok{(}\StringTok{"Wind,<br>mph"}\NormalTok{),}
+    \DataTypeTok{Temp =} \KeywordTok{html}\NormalTok{(}\StringTok{"Temp,<br>&deg;F"}\NormalTok{)}
+\NormalTok{  )}
+\CommentTok{# Show the gt Table}
+\NormalTok{gt_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\captionsetup[table]{labelformat=empty,skip=1pt}
+
+\begin{longtable}{rrrrrrr}
+\caption*{
+\large New York Air Quality Measurements\\ 
+\small Daily measurements in New York City (May 1-10, 1973)\\ 
+} \\ 
+\toprule
+\multicolumn{3}{c}{Time} & \multicolumn{4}{c}{Measurement} \\ 
+ \cmidrule(lr){1-3}\cmidrule(lr){4-7}
+Year & Month & Day & Ozone,<br>ppbV & Solar R.,<br>cal/m<sup>2</sup> & Wind,<br>mph & Temp,<br>&deg;F \\ 
+\midrule
+1973 & 5 & 1 & 41 & 190 & 7.4 & 67 \\ 
+1973 & 5 & 2 & 36 & 118 & 8.0 & 72 \\ 
+1973 & 5 & 3 & 12 & 149 & 12.6 & 74 \\ 
+1973 & 5 & 4 & 18 & 313 & 11.5 & 62 \\ 
+1973 & 5 & 5 & NA & NA & 14.3 & 56 \\ 
+1973 & 5 & 6 & 28 & NA & 14.9 & 66 \\ 
+1973 & 5 & 7 & 23 & 299 & 8.6 & 65 \\ 
+1973 & 5 & 8 & 19 & 99 & 13.8 & 59 \\ 
+1973 & 5 & 9 & 8 & 19 & 20.1 & 61 \\ 
+1973 & 5 & 10 & NA & 194 & 8.6 & 69 \\ 
+\bottomrule
+\end{longtable}
+
+Note that even though columns were moved using
+\texttt{cols\_move\_to\_start()}, the \emph{spanner column labels} still
+spanned above the correct \emph{column labels}. There are a number of
+functions that \textbf{gt} provides to move columns, including
+\texttt{cols\_move()}, \texttt{cols\_move\_to\_end()}; there's even a
+function to hide columns: \texttt{cols\_hide()}.
+
+Multiple columns can be renamed in a single use of
+\texttt{cols\_label()}. Further to this, the helper functions
+\texttt{md()} and \texttt{html()} can be used to create column labels
+with additional styling. In the above example, we provided column labels
+as HTML so that we can insert linebreaks with
+\texttt{\textless{}br\textgreater{}}, insert a superscripted \texttt{2}
+(with
+\texttt{\textless{}sup\textgreater{}2\textless{}/sup\textgreater{}}),
+and insert a degree symbol as an HTML entity (\texttt{\&deg;}).
+
+
+\end{document}
