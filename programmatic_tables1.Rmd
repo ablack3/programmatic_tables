@@ -2,7 +2,9 @@
 title: "Programmatic Tables 1"
 output:
   word_document: default
+  pdf_document: default
   html_document: default
+css: styles.css 
 ---
 
 ```{r setup, include=FALSE}
@@ -13,93 +15,101 @@ knitr::opts_chunk$set(echo = TRUE)
 
 How should we populate tables for academic paper or presentation? This is the fundamental question we are looking to address in the next two R user group sessions. If you have ever created tables "by hand" then you know how time consuming this process can be. It is also error prone since we humans are not nearly as good at copying as computers. Eventually we will make a copy error. Also updating a table that you have created by hand can be a difficult process.
 
-In this exercise we will introduce some alternative techniques using the `gt` package in R.
+In this exercise we will introduce some alternative techniques using the `gt` package in R. [https://gt.rstudio.com/](https://gt.rstudio.com/)
 
 First load the dplyr and gt packages. You might need to install the the if you have not installed it already
 ```{r, eval=FALSE}
 install.packages("tidyverse")
+install.packages("tableone")
 devtools::install_github("rstudio/gt")
 ```
 
 ```{r, message=F}
 library(tidyverse)
 library(gt)
+library(tableone)
 ```
 
-Let's look at the 10 most populous conunties in 1960 using countrypops dataset. We pull our data using dplyr and then just pass the result to `gt()` to get a nice looking table.
+Let's look at the 10 most populous conunties in 1960 using countrypops dataset. We pull our data using dplyr and then just pass the result to `gt()` to get a nice looking table. This is a two step process where we first create our *table data* (the data that will populate our table stored in a dataframe) and then use `gt` to convert that into a nicely formatted table.
+
+<img src="images/gt_workflow_diagram" width=100%>
+
+## Simple table of counts
+
 ```{r}
-countrypops %>% 
+table_data <- countrypops %>% 
   filter(year == 1960) %>% 
   count(country_name, wt = population, sort = T) %>% 
-  top_n(4, wt = n) %>% 
+  mutate(pct = n/sum(as.numeric(n))) %>% 
+  top_n(4, wt = n) 
+
+table_data %>% 
   gt() 
 
 ```
 
-How might we improve this table? We could apply some number formatting, change the column headers and add a table title. Let's also add a column that shows percentage of the world's population in each country.
+How might we improve this table? We could apply some number formatting, change the column headers and add a table title. 
+We are still using the same table data but just formatting it. Formatting a gt table is a lot like adding layers to a ggplot.
 
-```{r, eval=T}
-countrypops %>% 
-  filter(year == 1960) %>% 
-  count(country_name, wt = population, sort = T) %>% 
-  mutate(pct = n/sum(as.numeric(n))) %>% 
-  top_n(4, wt = n) %>% 
+```{r}
+table_data %>% 
   gt() %>% 
   fmt_number(columns = vars(n), decimals = 0) %>%
   fmt_percent(vars(pct), decimals = 1) %>%
   cols_label(country_name = "Country", n = "Population", pct = "%") %>%
-  tab_header("Top 5 countries with highest population in 1970") 
+  tab_header("Countries with largest population in 1960") 
 
 ```
 
 
-Ok that's nice. What else can we do? Let's find the countries that had the largest population growth from 1960 to the present. We will fit a very simple linear regression model to the population growth of each country and then compare the slopes for each country.
-```{r} 
-  # fit a simple linear regression model for each country and extract the model coeficient for "year"
-slopes <- countrypops %>% 
-  nest(-country_name) %>% 
-  mutate(model = map(data, ~broom::tidy(lm(population ~ year, data = .)))) %>% 
-  unnest(model) %>% 
-  filter(term == "year") 
-  
-slopes %>% 
-  top_n(5, wt = estimate) %>% 
-  arrange(desc(estimate)) %>% 
-  select(-term, -statistic) %>% 
+
+## Exercise 1
+
+use the built in `pizzaplace` dataset to create a table with the most popular pizza types.
+
+```{r}
+
+# first create the data that will populate your table
+table_data <- pizzaplace %>% 
+  count(type)
+
+# then create a formatted display table
+table_data %>% 
   gt() %>% 
-  fmt_number(vars(estimate, std.error), decimals = 0) %>% 
-  fmt_number(vars(p.value), decimals = 3) %>% 
-  tab_header("Model estimated yearly population increases", subtitle = "1960 to 2017")
-
+  fmt_number(2, decimals = 0) %>% 
+  cols_label(type = "Pizza type", n = "Number of orders")
 
 ```
 
-Ok now it's your turn. We are going to fit a logistic regression model and present the model coeficients and confidence intervals in a nice table. No copy and pasting - just R code. 
+## Regression Table
+
+We are going to fit a logistic regression model and present the model coeficients and confidence intervals in a nice table. No copy and pasting - just R code. 
 We will be using the built in titanic dataset and predicting survival (Yes/No) based on age, sex, and class.
 ```{r}
+
 # convert the built in dataset to a dataframe with one row per person
 titanic <- as.data.frame(Titanic) %>% 
   uncount(Freq) %>% 
-  remove_missing()
+  remove_missing() %>% 
+  rename_all(tolower)
 
-# fit the model and get the output as a dataframe
-model_output <- glm(Survived ~ ., data = titanic, family = binomial) %>% 
-  broom::tidy(exponentiate = T, conf.int = T) 
 
-model_output %>% 
-  gt()
-```
+# fit the model with just class as a predictor and get the output as a dataframe
+model_output <- glm(survived ~ class + sex + age, data = titanic, family = binomial) %>% 
+  broom::tidy(exponentiate = T, conf.int = T, conf.level = .95)
 
-Try cleaning up this table by formatting the displays of the numbers, changing the column names, and adding a table header. For a challange try to reproduce the following table.
-
-```{r, echo = F}
-model_output %>% 
+# create the data to populate the table
+table_data <- model_output %>% 
   mutate(ci = paste0("(", round(conf.high, 2), ", ", round(conf.low, 2), ")")) %>% 
   select(term, estimate, ci) %>% 
-  mutate(term = stringr::str_remove(term, "Class|Sex|Age")) %>% 
+  mutate(term = stringr::str_remove(term, "class|sex|age")) %>% 
   add_row(term = "1st (ref)",   estimate = 1, .after = 1) %>% 
   add_row(term = "Male (ref)",  estimate = 1, .after = 5) %>% 
   add_row(term = "Child (ref)", estimate = 1, .after = 7) %>% 
+  mutate(ci = ifelse(is.na(ci), "-", ci))
+
+# then pass the table data to gt and add formatting
+table_data %>% 
   gt() %>% 
   fmt_number(2, decimals = 2) %>% 
   tab_row_group("", 1) %>% 
@@ -107,8 +117,26 @@ model_output %>%
   tab_row_group("Sex", 6:7) %>% 
   tab_row_group("Age Group", 8:9) %>% 
   cols_label(term = "Term", estimate = "Odds Ratio", ci = "95% CI") %>% 
-  tab_header("Titanic Mortality Model")
-  
+  tab_header("Titanic Mortality Model") %>% 
+  cols_align("center", columns = "ci")
 ```
 
-And now for the bad news. The `gt` package is still in pretty early development. In theory you will eventually be able to knit an RMarkdown document to html, pdf, or Microsoft word without changing your code at all and the tables will all look good in any format. This is not quite a reality yet. `gt` works best with html. Microsoft does a good job of converting html to word tables when you copy a table off of a web page and paste it into a word doc. Generating html tables and pasting them into a word doc is one possible workflow. The dream of truely programmatically generated tables is getting closer but the reality is that we can get close with code but will still probably be touching up our tables by hand for a while. 
+## Exercise 2?
+
+
+
+## Ideas about workflow
+
+**Feel free to change or rewrite any of this**
+Now that we have created some tables with RMarkdown how do we actually get these into Word docs?
+
+The `gt` package is still in pretty early development. In theory you will eventually be able to knit an RMarkdown document to html, pdf, or Microsoft Word without changing your code at all and the tables will all look good in any format. This is not quite a reality yet. `gt` works best with html. Microsoft does a good job of converting html to word tables when you copy a table off of a web page and paste it into a word doc. Generating html tables and pasting them into a word doc is one possible workflow. The dream of truely programmatically generated tables is getting closer but the reality is that we can get close with code but will still probably be touching up our tables by hand for a while. 
+
+Options
+
+* Knit to MS Word
+* Knit to RTF and open the RTF doc in MS Word
+* Knit to html and copy and paste the whole table into Word
+
+Anything else?
+
